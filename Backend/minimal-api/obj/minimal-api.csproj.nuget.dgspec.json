@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\backend\\minimal-api\\minimal-api.csproj": {}
+    "c:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\Backend\\minimal-api\\minimal-api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\backend\\minimal-api\\minimal-api.csproj": {
+    "c:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\Backend\\minimal-api\\minimal-api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\backend\\minimal-api\\minimal-api.csproj",
+        "projectUniqueName": "c:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\Backend\\minimal-api\\minimal-api.csproj",
         "projectName": "minimal-api",
-        "projectPath": "C:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\backend\\minimal-api\\minimal-api.csproj",
+        "projectPath": "c:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\Backend\\minimal-api\\minimal-api.csproj",
         "packagesPath": "C:\\Users\\andre\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\backend\\minimal-api\\obj\\",
+        "outputPath": "c:\\Users\\andre\\Documents\\GitHub\\react\\Projeto de arquitetura\\arquitetura\\estacionamento_C-_React\\Backend\\minimal-api\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
