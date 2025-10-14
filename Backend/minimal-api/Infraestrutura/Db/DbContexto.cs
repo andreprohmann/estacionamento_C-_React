@@ -18,6 +18,22 @@ public class DbContexto : DbContext
     //Definir as entidades do banco de dados
     public DbSet<admin> Admins { get; set; } = default!;
 
+    //Definir os dados iniciais ADMIN
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<admin>().HasData(
+            new admin
+            {
+                Id = 1,
+                Nome = "Admin",
+                Email = "admin@example.com",
+                Senha = "123456",
+                Perfil = "Admin"
+            }
+        );
+    }
+    
+    //Configurar o DbContexto
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
 
