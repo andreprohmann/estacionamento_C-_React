@@ -29,8 +29,11 @@ public class DbContexto : DbContext
             //Se a string de conexão não for nula ou vazia, configura o DbContexto
             if(!string.IsNullOrEmpty(stringConnection))
             {
-                optionsBuilder.UseMySql(stringConnection,
-                ServerVersion.AutoDetect(stringConnection));
+                optionsBuilder.UseMySql(
+                    stringConnection,
+                        ServerVersion.AutoDetect(
+                            stringConnection
+                    ));
 
                 return;
             }
