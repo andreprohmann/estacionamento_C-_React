@@ -7,7 +7,7 @@ var app = builder.Build();
 // Login
 app.MapGet("/", () => "Hello World!");
 
-app.MapPost("/login", (LoginDTO loginDTO) =>
+app.MapPost("/login", (minimal_api.DTOs.LoginDTO loginDTO) =>
 {
     if (loginDTO.Email == "admin@example.com" && loginDTO.Senha == "123456")
     {
@@ -18,8 +18,6 @@ app.MapPost("/login", (LoginDTO loginDTO) =>
         return Results.Unauthorized();
     }
 });
-
-
 
 // Dashboard
 app.MapGet("/estacionamento", () => "Estacionamento");
@@ -32,10 +30,3 @@ app.MapGet("/funcionario", () => "funcionario");
 
 app.Run();
 
-
-
-public class LoginDTO
-{
-    public string Email {get; set;} = default!;
-    public string Senha {get; set;} = default!;
-}
