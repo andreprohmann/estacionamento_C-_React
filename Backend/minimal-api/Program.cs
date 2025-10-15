@@ -1,10 +1,16 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using minimal_api.infraestrutura.Db;
+using minimal_api.dominio.interfaces;
+using minimal_api.dominio.Servicos;
+using minimal_api.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
+// Add services to the container.
+builder.Services.AddScoped<iAdminServices, adminServices>() ;
 
 //Configurar o DbContexto com a string de conexão do appsettings.json
 builder.Services.AddDbContext<DbContexto>(options =>
@@ -18,9 +24,10 @@ builder.Services.AddDbContext<DbContexto>(options =>
 var app = builder.Build();
 
 // Endpoint de login
-app.MapPost("/login", (minimal_api.DTOs.LoginDTO loginDTO) =>
+app.MapPost("/login", ([FromBody]LoginDTO loginDTO, iAdminServices adminServices) =>
 {
-    if (loginDTO.Email == "admin@example.com" && loginDTO.Senha == "123456")
+    // Verificar se o login é válido
+    if (adminServices.Login(loginDTO) != null)
     {
         return Results.Ok("Login bem-sucedido");
     }
