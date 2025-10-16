@@ -1,9 +1,9 @@
-namespace minimal_api.dominio.Servicos;
 using minimal_api.dominio.interfaces;
 using minimal_api.DTOs;
 using minimal_api.dominio.Entidades;
 using minimal_api.infraestrutura.Db;
 
+namespace minimal_api.dominio.Servicos;
 public class adminServices: iAdminServices
 {
     //Injetar o DbContexto
