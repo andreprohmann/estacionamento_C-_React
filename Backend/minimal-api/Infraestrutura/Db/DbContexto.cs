@@ -18,7 +18,7 @@ public class DbContexto : DbContext
     //Definir as entidades do banco de dados
     public DbSet<admin> Admins { get; set; } = default!;
 
-     public DbSet<admin> Veiculos { get; set; } = default!;
+     public DbSet<veiculo> Veiculos { get; set; } = default!;
     //Definir os dados iniciais ADMIN
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,4 +1,4 @@
-using System.Linq;
+
 using minimal_api.dominio.Entidades;
 using minimal_api.infraestrutura.Db;
 using minimal_api.dominio.interfaces;
@@ -16,6 +16,7 @@ public class veiculosServices: iVeiculosServices
         _contexto = contexto;
     }
 
+    //Implementar os métodos da interface
     public void Atualizar(veiculo veiculo)
     {
         _contexto.Set<veiculo>().Update(veiculo);
@@ -37,6 +38,7 @@ public class veiculosServices: iVeiculosServices
         {
             query = query.Where(v => EF.Functions.Like(v.Nome.ToLower(), $"%{Nome.ToLower()}%"));
         }
+
         int itemsPerPage = 10;
 
         query = query.Skip((page - 1) * itemsPerPage).Take(itemsPerPage);
