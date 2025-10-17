@@ -5,12 +5,17 @@ using minimal_api.dominio.interfaces;
 using minimal_api.dominio.Servicos;
 using minimal_api.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using minimal_api.dominio.ModelViews;
 
 
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<iAdminServices, adminServices>() ;
+
+//Adicionar o serviço de veiculos
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 //Configurar o DbContexto com a string de conexão do appsettings.json
 builder.Services.AddDbContext<DbContexto>(options =>
@@ -22,6 +27,9 @@ builder.Services.AddDbContext<DbContexto>(options =>
 });
 
 var app = builder.Build();
+
+// Endpoints Home
+app.MapGet("/", () => Results.Json(new Home()));
 
 // Endpoint de login
 app.MapPost("/login", ([FromBody]LoginDTO loginDTO, iAdminServices adminServices) =>
@@ -36,6 +44,10 @@ app.MapPost("/login", ([FromBody]LoginDTO loginDTO, iAdminServices adminServices
         return Results.Unauthorized();
     }
 });
+
+// Configure the HTTP request pipeline.
+app.UseSwagger();
+app.UseSwaggerUI();
 
 // Dashboard
 app.MapGet("/estacionamento", () => "Estacionamento");

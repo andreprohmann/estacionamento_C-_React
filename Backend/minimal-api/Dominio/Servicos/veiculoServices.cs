@@ -31,6 +31,11 @@ public class veiculosServices: iVeiculosServices
     {
         return _contexto.Set<veiculo>().Where(v => v.Id == id).FirstOrDefault();
     }
+    public void Deletar(veiculo veiculo)
+    {
+        _contexto.Set<veiculo>().Remove(veiculo);
+        _contexto.SaveChanges();
+    }
     public List<veiculo> Todos(int page = 1, string? Nome = null, string? Marca = null)
     {
         var query = _contexto.Veiculos.AsQueryable();

@@ -9,7 +9,7 @@ public interface iVeiculosServices
     List<veiculo> Todos(int page, string? Nome = null, string? Marca = null);
     veiculo? BuscarPorId(int id);
     void Cadastrar(veiculo veiculo);
-    void Atualizar(int id, veiculo veiculo);
+    void Atualizar(veiculo veiculo);
     void Deletar(veiculo veiculo);
     
 }
