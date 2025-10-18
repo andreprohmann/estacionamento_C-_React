@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using minimal_api.infraestrutura.Db;
 
@@ -11,9 +12,11 @@ using minimal_api.infraestrutura.Db;
 namespace minimal_api.Migrations
 {
     [DbContext(typeof(DbContexto))]
-    partial class DbContextoModelSnapshot : ModelSnapshot
+    [Migration("20251018172441_veiculoDateTimeMigration")]
+    partial class veiculoDateTimeMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,10 +99,6 @@ namespace minimal_api.Migrations
 
                     b.Property<DateTime>("checkOut")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<double>("valorTotal")
-                        .HasMaxLength(50)
-                        .HasColumnType("double");
 
                     b.HasKey("Id");
 

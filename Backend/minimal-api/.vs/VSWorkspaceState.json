@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Dominio",
+    "\\Dominio\\DTOs",
+    "\\Dominio\\Entidades",
+    "\\Dominio\\interfaces",
+    "\\Dominio\\ModelViews",
+    "\\Dominio\\Servicos",
+    "\\Infraestrutura",
+    "\\Infraestrutura\\Db"
+  ],
+  "SelectedNode": "\\Dominio\\Servicos\\veiculoServices.cs",
+  "PreviewInSolutionExplorer": false
+}

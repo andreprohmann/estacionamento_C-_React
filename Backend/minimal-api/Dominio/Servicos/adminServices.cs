@@ -14,7 +14,12 @@ public class adminServices: iAdminServices
     {
         _contexto = contexto;
     }
-    
+
+    public object BuscarPorEmail(string email)
+    {
+        throw new NotImplementedException();
+    }
+
     //Implementar os métodos da interface
     public admin? Login(LoginDTO loginDTO)
     {

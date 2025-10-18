@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using Microsoft.EntityFrameworkCore;
 namespace minimal_api.dominio.Entidades;
 
+
 // Definir a entidade Admin
+[Index(nameof(Email), IsUnique = true)]
 public class admin
 {
     // Definir as propriedades da entidade
