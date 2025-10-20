@@ -1,77 +1,69 @@
-using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using minimal_api.infraestrutura.Db;
-using minimal_api.dominio.interfaces;
-using minimal_api.dominio.Servicos;
-using minimal_api.dominio.Entidades;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Connection String (appsettings.json -> "MySql")
-var cs = builder.Configuration.GetConnectionString("MySql")
-         ?? "server=localhost;port=3306;database=estacionamento;user=root;password=senha;charset=utf8mb4";
-
-// EF Core + Pomelo MySQL
-builder.Services.AddDbContext<EstacionamentoContexto>(opt =>
-    opt.UseMySql(cs, ServerVersion.AutoDetect(cs)));
-
-// Serviços de domínio
-builder.Services.AddScoped<iVagasServices, VagasServices>();
-builder.Services.AddScoped<iVeiculosServices, veiculosServices>();
-builder.Services.AddScoped<iAdminServices, adminServices>();
-
-// Swagger
+// ===== Serviços (sempre ANTES do Build) =====
+const string CorsPolicy = "Frontend";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicy, policy =>
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+builder.Services.AddDbContext<EstacionamentoContexto>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Estacionamento API", Version = "v1" });
+});
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// ===== Middlewares / Pipeline (sempre DEPOIS do Build) =====
+app.UseCors(CorsPolicy);
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+// ===== Endpoints de exemplo =====
+app.MapGet("/vagas/ocupacao-atual", () =>
 {
-    app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    var total = 50;
+    var occupied = 12;
+    var available = total - occupied;
+    return Results.Ok(new { totalSpots = total, occupied, available });
+});
 
-// ===== Endpoints de Vagas =====
-
-// Ocupação atual
-app.MapGet("/vagas/ocupacao-atual",
-    async ([FromServices] iVagasServices serv) =>
+app.MapGet("/veiculos", () =>
 {
-    var itens = await serv.OcupacaoAtualAsync();
-    return Results.Ok(itens.Select(x => new { vaga = x.NumeroVaga, placa = x.Placa }));
-}).WithTags("Vagas");
+    var veiculos = new[]
+    {
+        new { placa = "ABC1D23", modelo = "Fiesta", cor = "Prata", nomeMotorista = "João" },
+        new { placa = "DEF2G45", modelo = "Onix", cor = "Preto", nomeMotorista = (string?)null },
+    };
+    return Results.Ok(veiculos);
+});
 
-// Ocupar
-app.MapPost("/vagas/{vagaId:long}/ocupar/{veiculoId:long}",
-    async ([FromRoute] long vagaId,
-           [FromRoute] long veiculoId,
-           [FromServices] iVagasServices serv) =>
+app.MapPost("/estacionamento/checkin", (CheckinDto dto) =>
 {
-    await serv.OcuparAsync(vagaId, veiculoId);
-    return Results.NoContent();
-}).WithTags("Vagas");
+    // Aqui você incluiria persistência etc.
+    return Results.Ok(new { ok = true });
+});
 
-// Liberar
-app.MapPost("/vagas/{vagaId:long}/liberar",
-    async ([FromRoute] long vagaId,
-           [FromServices] iVagasServices serv) =>
+app.MapPost("/estacionamento/checkout", (CheckoutDto dto) =>
 {
-    await serv.LiberarAsync(vagaId);
-    return Results.NoContent();
-}).WithTags("Vagas");
-
-// ===== Endpoints de Veículos (exemplos mínimos) =====
-app.MapGet("/veiculos", async ([FromServices] iVeiculosServices serv) =>
-    Results.Ok(await serv.ListarAsync()))
-.WithTags("Veículos");
-
-app.MapPost("/veiculos", async ([FromBody] Veiculo veiculo,
-                                [FromServices] iVeiculosServices serv) =>
-{
-    var criado = await serv.CriarAsync(veiculo);
-    return Results.Created($"/veiculos/{criado.Id}", criado);
-}).WithTags("Veículos");
+    // Regra fictícia
+    var price = 15.0m;
+    return Results.Ok(new { price, vehicle = new { placa = dto.Placa } });
+});
 
 app.Run();
+
+// ===== DTOs =====
+public record CheckinDto(string Placa, string? Modelo, string? Cor, string? NomeMotorista);
+public record CheckoutDto(string Placa);

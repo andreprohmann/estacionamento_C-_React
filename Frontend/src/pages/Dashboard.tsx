@@ -1,62 +1,51 @@
-import { useEffect, useState } from 'react';
-import { getStatus } from '../services/parkingService';
-import { Vehicle } from '../types';
-import {
-  Alert, CircularProgress, Container, Paper, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Typography
-} from '@mui/material';
 
-export default function VehiclesList() {
-  const [rows, setRows] = useState<Vehicle[]>([]);
+import { useEffect, useState } from 'react';
+import { Alert, Card, CardContent, CircularProgress, Typography } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
+import { getOcupacaoAtual } from '../services/parkingService';
+import type { OcupacaoAtual } from '../types';
+
+export default function Dashboard() {
+  const [status, setStatus] = useState<OcupacaoAtual | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
 
   useEffect(() => {
     (async () => {
       try {
-        const data = await getStatus();
-        setRows(data);
+        const s = await getOcupacaoAtual();
+        setStatus(s);
       } catch (e: any) {
-        setError(e?.message ?? 'Erro ao carregar veículos');
+        setError(e?.message ?? 'Erro ao carregar ocupação atual');
       } finally {
         setLoading(false);
       }
     })();
   }, []);
 
-  return (
-    <Container sx={{ py: 3 }}>
-      <Typography variant="h5" gutterBottom>Veículos no pátio</Typography>
-      {loading && <CircularProgress />}
-      {error && <Alert severity="error">{error}</Alert>}
+  if (loading) return <CircularProgress sx={{ m: 3 }} />;
+  if (error) return <Alert severity="error">{error}</Alert>;
 
-      {!loading && !error && (
-        <TableContainer component={Paper}>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Placa</TableCell>
-                <TableCell>Modelo</TableCell>
-                <TableCell>Cor</TableCell>
-                <TableCell>Motorista</TableCell>
-                <TableCell>Entrada</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((v) => (
-                <TableRow key={v.plate}>
-                  <TableCell>{v.plate}</TableCell>
-                  <TableCell>{v.model ?? '—'}</TableCell>
-                  <TableCell>{v.color ?? '—'}</TableCell>
-                  <TableCell>{v.driverName ?? '—'}</TableCell>
-                  <TableCell>{v.timeIn ? new Date(v.timeIn).toLocaleString() : '—'}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </Container>
+  return (
+    <Grid container spacing={2} sx={{ p: 2 }}>
+      <Grid size={{ xs: 12, md: 4 }}>
+        <Card><CardContent>
+          <Typography variant="h6">Vagas Totais</Typography>
+          <Typography variant="h3">{status?.totalSpots ?? '—'}</Typography>
+        </CardContent></Card>
+      </Grid>
+      <Grid size={{ xs: 12, md: 4 }}>
+        <Card><CardContent>
+          <Typography variant="h6">Ocupadas</Typography>
+          <Typography variant="h3">{status?.occupied ?? '—'}</Typography>
+        </CardContent></Card>
+      </Grid>
+      <Grid size={{ xs: 12, md: 4 }}>
+        <Card><CardContent>
+          <Typography variant="h6">Disponíveis</Typography>
+          <Typography variant="h3">{status?.available ?? '—'}</Typography>
+        </CardContent></Card>
+      </Grid>
+    </Grid>
   );
 }
-``

@@ -1,17 +1,18 @@
+
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Alert, Box, Button, Container, Stack, TextField, Typography
-} from '@mui/material';
+import { Alert, Box, Button, Container, Stack, TextField, Typography } from '@mui/material';
 import { checkinVehicle } from '../../services/parkingService';
 
-const plateRegex =/^(?:[A-Z]{3}-?\d{4}|[A-Z]{3}\d[A-Z]\d{2})$/i; // simples; adapte se usar Mercosul
+// Aceita padrão antigo (ABC-1234/ABC1234) e Mercosul (ABC1D23)
+export const plateRegex = /^(?:[A-Z]{3}-?\d{4}|[A-Z]{3}\d[A-Z]\d{2})$/i;
+
 const schema = z.object({
-  plate: z.string().min(7, 'Informe a placa').regex(plateRegex, 'Placa inválida'),
-  model: z.string().optional(),
-  color: z.string().optional(),
-  driverName: z.string().min(2, 'Nome muito curto'),
+  placa: z.string().regex(plateRegex, 'Placa inválida'),
+  modelo: z.string().optional(),
+  cor: z.string().optional(),
+  nomeMotorista: z.string().min(2, 'Nome muito curto').optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -22,10 +23,10 @@ export default function VehicleCheckin() {
 
   const onSubmit = async (data: FormData) => {
     await checkinVehicle({
-      plate: data.plate.toUpperCase(),
-      model: data.model,
-      color: data.color,
-      driverName: data.driverName,
+      placa: data.placa.toUpperCase().replace('-', ''),
+      modelo: data.modelo,
+      cor: data.cor,
+      nomeMotorista: data.nomeMotorista,
     });
     reset();
     alert('Check-in realizado!');
@@ -38,24 +39,21 @@ export default function VehicleCheckin() {
         <Stack spacing={2}>
           <TextField
             label="Placa"
-            {...register('plate')}
-            error={!!errors.plate}
-            helperText={errors.plate?.message}
+            {...register('placa')}
+            error={!!errors.placa}
+            helperText={errors.placa?.message}
             inputProps={{ style: { textTransform: 'uppercase' } }}
           />
-          <TextField label="Modelo" {...register('model')} />
-          <TextField label="Cor" {...register('color')} />
-          <TextField
-            label="Nome do motorista"
-            {...register('driverName')}
-            error={!!errors.driverName}
-            helperText={errors.driverName?.message}
-          />
+          <TextField label="Modelo" {...register('modelo')} />
+          <TextField label="Cor" {...register('cor')} />
+          <TextField label="Nome do motorista" {...register('nomeMotorista')} />
           <Button type="submit" variant="contained" disabled={isSubmitting}>
             {isSubmitting ? 'Enviando...' : 'Registrar Check‑in'}
           </Button>
+
+          {/* Corrigido: exibir chaves como texto literal */}
           <Alert severity="info">
-            Ajuste as rotas no arquivo <code>parkingService.ts</code> para casar com sua API.
+            Payload alinhado: {'{ placa, modelo, cor, nomeMotorista }'}
           </Alert>
         </Stack>
       </Box>

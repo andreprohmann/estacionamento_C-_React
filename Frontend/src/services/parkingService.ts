@@ -1,29 +1,34 @@
+
 import { api } from './api';
-import { ApiResponse, ParkingStatus, Vehicle } from '../types';
+import type { OcupacaoAtual, VeiculoDto } from '../types';
 
 const routes = {
-  status: '/api/estacionamento/status',
-  vehicles: '/api/veiculos',
-  checkin: '/api/estacionamento/checkin',
-  checkout: '/api/estacionamento/checkout',
-};
+  ocupacaoAtual: '/vagas/ocupacao-atual',
+  veiculos: '/veiculos',
+  checkin: '/estacionamento/checkin',
+  checkout: '/estacionamento/checkout',
+} as const;
 
-export async function getStatus() {
-  const { data } = await api.get<ApiResponse<ParkingStatus>>(routes.status);
-  return data.data;
+export async function getOcupacaoAtual(): Promise<OcupacaoAtual> {
+  const { data } = await api.get<OcupacaoAtual>(routes.ocupacaoAtual);
+  return data;
 }
 
-export async function listVehicles() {
-  const { data } = await api.get<ApiResponse<Vehicle[]>>(routes.vehicles);
-  return data.data;
+export async function listVehicles(): Promise<VeiculoDto[]> {
+  const { data } = await api.get<VeiculoDto[]>(routes.veiculos);
+  return data;
 }
 
-export async function checkinVehicle(payload: Pick<Vehicle, 'plate' | 'model' | 'color' | 'driverName'>) {
-  const { data } = await api.post<ApiResponse<Vehicle>>(routes.checkin, payload);
-  return data.data;
+export async function checkinVehicle(payload: VeiculoDto) {
+  const { data } = await api.post(routes.checkin, payload, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return data;
 }
 
-export async function checkoutVehicle(plate: string) {
-  const { data } = await api.post<ApiResponse<{ price: number; vehicle: Vehicle }>>(routes.checkout, { plate });
-  return data.data;
+export async function checkoutVehicle(placa: string) {
+  const { data } = await api.post(routes.checkout, { placa }, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+  return data; // esperado: { price: number, vehicle: VeiculoDto }
 }
