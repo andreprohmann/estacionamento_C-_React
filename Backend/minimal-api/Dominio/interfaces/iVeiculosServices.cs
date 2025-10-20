@@ -1,15 +1,13 @@
-using minimal_api.DTOs;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using minimal_api.dominio.Entidades;
-using minimal_api.Migrations;
 
-namespace minimal_api.dominio.interfaces;
-public interface iVeiculosServices
+namespace minimal_api.dominio.interfaces
 {
-    //Definir os métodos da interface
-    List<veiculo> Todos(int? page, string? Nome = null, string? Marca = null);
-    veiculo? BuscarPorId(int id);
-    void Cadastrar(veiculo veiculo);
-    void Atualizar(veiculo veiculo);
-    void Deletar(veiculo veiculo);
-    
+    public interface iVeiculosServices
+    {
+        Task<Veiculo> CriarAsync(Veiculo veiculo, CancellationToken ct = default);
+        Task<IReadOnlyList<Veiculo>> ListarAsync(CancellationToken ct = default);
+    }
 }

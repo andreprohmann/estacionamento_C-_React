@@ -1,4 +1,5 @@
-namespace minimal_api.dominio.DTOs;
+using minimal_api.dominio.Entidades;
+namespace minimal_api.dominio.DTO;
 
 public record veiculoDTO
 {
@@ -10,4 +11,5 @@ public record veiculoDTO
     public DateTime checkIn { get; set; } = default!;
     public DateTime checkOut { get; set; } = default!;
     public double valorTotal { get; set; } = default!;
+    public ICollection<Ocupacao>? Ocupacao { get; set; }
 }

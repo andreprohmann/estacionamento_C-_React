@@ -1,57 +1,26 @@
-
-using minimal_api.dominio.Entidades;
-using minimal_api.infraestrutura.Db;
-using minimal_api.dominio.interfaces;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using minimal_api.dominio.interfaces;
+using minimal_api.infraestrutura.Db;
+using minimal_api.dominio.Entidades;
 
-namespace minimal_api.dominio.Servicos;
-public class veiculosServices: iVeiculosServices
+namespace minimal_api.dominio.Servicos
 {
-    //Injetar o DbContexto
-    private readonly DbContexto _contexto;
+    public class veiculosServices : iVeiculosServices
+    {
+        private readonly EstacionamentoContexto _ctx;
+        public veiculosServices(EstacionamentoContexto ctx) { _ctx = ctx; }
 
-    //Construtor que recebe o DbContexto para injetar no atributo 
-    public veiculosServices(DbContexto contexto)
-    {
-        _contexto = contexto;
-    }
-
-    //Implementar os métodos da interface
-    public void Atualizar(veiculo veiculo)
-    {
-        _contexto.Set<veiculo>().Update(veiculo);
-        _contexto.SaveChanges();
-    }
-    public void Cadastrar(veiculo veiculo)
-    {
-        _contexto.Set<veiculo>().Add(veiculo);
-        _contexto.SaveChanges();
-    }
-    public veiculo? BuscarPorId(int id)
-    {
-        return _contexto.Set<veiculo>().Where(v => v.Id == id).FirstOrDefault();
-    }
-    public void Deletar(veiculo veiculo)
-    {
-        _contexto.Set<veiculo>().Remove(veiculo);
-        _contexto.SaveChanges();
-    }
-    public List<veiculo> Todos(int? page = 1, string? Nome = null, string? Marca = null)
-    {
-        var query = _contexto.Veiculos.AsQueryable();
-        if (!string.IsNullOrEmpty(Nome))
+        public async Task<Veiculo> CriarAsync(Veiculo veiculo, CancellationToken ct = default)
         {
-            query = query.Where(v => EF.Functions.Like(v.Nome.ToLower(), $"%{Nome.ToLower()}%"));
+            _ctx.Veiculos.Add(veiculo);
+            await _ctx.SaveChangesAsync(ct);
+            return veiculo;
         }
 
-        int itemsPerPage = 10;
-
-        if(page != null)
-        {
-            query = query.Skip(((int)page - 1) * itemsPerPage).Take(itemsPerPage);
-        }        
-            
-        
-        return query.ToList();
+        public Task<IReadOnlyList<Veiculo>> ListarAsync(CancellationToken ct = default)
+            => _ctx.Veiculos.AsNoTracking().ToListAsync(ct).ContinueWith<IReadOnlyList<Veiculo>>(t => t.Result, ct);
     }
 }

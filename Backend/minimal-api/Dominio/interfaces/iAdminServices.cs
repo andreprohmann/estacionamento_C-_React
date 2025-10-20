@@ -1,11 +1,10 @@
-using minimal_api.DTOs;
-using minimal_api.dominio.Entidades;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace minimal_api.dominio.interfaces;
-public interface iAdminServices
+namespace minimal_api.dominio.interfaces
 {
-    object BuscarPorEmail(string email);
-
-    //Definir os métodos da interface
-    admin? Login(LoginDTO loginDTO);
+    public interface iAdminServices
+    {
+        Task<bool> ValidarLoginAsync(string email, string senha, CancellationToken ct = default);
+    }
 }
