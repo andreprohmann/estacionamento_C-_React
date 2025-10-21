@@ -1,14 +1,13 @@
-
 import { useEffect, useState } from 'react';
 import { listVehicles } from '../../services/parkingService';
-import type { VeiculoDto } from '../../types';
+import { Vehicle } from '../../types';
 import {
   Alert, CircularProgress, Container, Paper, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Typography
 } from '@mui/material';
 
 export default function VehiclesList() {
-  const [rows, setRows] = useState<VeiculoDto[]>([]);
+  const [rows, setRows] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>();
 
@@ -39,14 +38,18 @@ export default function VehiclesList() {
                 <TableCell>Placa</TableCell>
                 <TableCell>Modelo</TableCell>
                 <TableCell>Cor</TableCell>
+                <TableCell>Motorista</TableCell>
+                <TableCell>Entrada</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((v) => (
-                <TableRow key={v.placa} hover>
-                  <TableCell>{v.placa}</TableCell>
-                  <TableCell>{v.modelo ?? '—'}</TableCell>
-                  <TableCell>{v.cor ?? '—'}</TableCell>
+                <TableRow key={v.plate}>
+                  <TableCell>{v.plate}</TableCell>
+                  <TableCell>{v.model ?? '—'}</TableCell>
+                  <TableCell>{v.color ?? '—'}</TableCell>
+                  <TableCell>{v.driverName ?? '—'}</TableCell>
+                  <TableCell>{v.timeIn ? new Date(v.timeIn).toLocaleString() : '—'}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -56,3 +59,4 @@ export default function VehiclesList() {
     </Container>
   );
 }
+``

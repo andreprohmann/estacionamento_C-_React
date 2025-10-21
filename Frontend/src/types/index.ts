@@ -1,3 +1,21 @@
+export type Plate = string;
+
+export interface Vehicle {
+  id?: string;
+  plate: Plate;
+  model?: string;
+  color?: string;
+  driverName?: string;
+  timeIn?: string;   // ISO
+  timeOut?: string;  // ISO
+}
+
+export interface ParkingStatus {
+  totalSpots: number;
+  occupied: number;
+  available: number;
+}
+
 
 export interface OcupacaoAtual {
   totalSpots: number;
@@ -5,11 +23,8 @@ export interface OcupacaoAtual {
   available: number;
 }
 
-export interface VeiculoDto {
-  placa: string;
-  modelo?: string;
-  cor?: string;
-  nomeMotorista?: string;
-  timeIn?: string;
-  timeOut?: string;
+
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
 }

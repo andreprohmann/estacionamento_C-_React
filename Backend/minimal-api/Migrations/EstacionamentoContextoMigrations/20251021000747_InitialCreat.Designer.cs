@@ -12,8 +12,8 @@ using minimal_api.infraestrutura.Db;
 namespace minimal_api.Migrations.EstacionamentoContextoMigrations
 {
     [DbContext(typeof(EstacionamentoContexto))]
-    [Migration("20251020230639_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20251021000747_InitialCreat")]
+    partial class InitialCreat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

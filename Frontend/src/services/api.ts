@@ -1,13 +1,22 @@
-
 import axios from 'axios';
-import { API_BASE_URL } from '../env';
 
 export const api = axios.create({
-  baseURL: API_BASE_URL, // vazio em dev => caminhos relativos => proxy do Vite
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 15000,
 });
 
-api.interceptors.response.use(
-  (res) => res,
-  (err) => Promise.reject(err)
-);
+export interface OcupacaoAtual {
+  totalSpots: number;
+  occupied: number;
+  available: number;
+}
+
+export async function getOcupacaoAtual(): Promise<OcupacaoAtual> {
+  const { data } = await api.get<OcupacaoAtual>('/vagas/ocupacao-atual');
+  return data;
+}
+
+export async function listVehicles() {
+  const { data } = await api.get<{ id: number; placa: string; modelo: string; cor: string }[]>('/veiculos');
+  return data;
+}
